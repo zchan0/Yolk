@@ -29,7 +29,6 @@ public class PictureController extends BaseController {
     public String addServerResource(HttpServletRequest req,
                                     @RequestParam(value = "username", required = false) String username) {
         try {
-
             ParamChecker.notBlank("username", username);
             ParamChecker.assertCondition(req instanceof MultipartHttpServletRequest,
                 "system error!");
