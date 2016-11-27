@@ -41,13 +41,17 @@ public class BaseController implements Constants {
     }
 
     /**
-     * 从session中获取当前用户
+     * 从session中获取当前用户 返回为空则认为没有登录
      */
     protected User getUserFromRequest(HttpServletRequest servletRequest) {
         HttpSession session = servletRequest.getSession();
         ParamChecker.notNull(session, SYSTEM_ERROR);
-        User user = (User) session.getAttribute(USER_SESSION_KEY);
-        return user;
+        Object userObject = session.getAttribute(USER_SESSION_KEY);
+        if (userObject == null) {
+            return null;
+        }
+        ParamChecker.assertCondition(userObject instanceof User, SYSTEM_ERROR);
+        return (User) userObject;
     }
 
     /**
