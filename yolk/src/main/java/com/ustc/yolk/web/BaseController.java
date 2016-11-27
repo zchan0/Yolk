@@ -4,12 +4,19 @@
  */
 package com.ustc.yolk.web;
 
-import com.alibaba.fastjson.JSON;
-import com.ustc.yolk.utils.common.BaseResult;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSON;
+import com.ustc.yolk.model.Constants;
+import com.ustc.yolk.model.User;
+import com.ustc.yolk.utils.common.BaseResult;
+import com.ustc.yolk.utils.common.ParamChecker;
 
 /**
  * controller公用方法
@@ -17,9 +24,10 @@ import java.io.IOException;
  * @author Administrator
  * @version $Id: BaseController.java, v 0.1 2016年11月27日 下午12:55:12 Administrator Exp $
  */
-public class BaseController {
+public class BaseController implements Constants {
 
-    private final static String filePath = "/root/yolkfiles/";
+    private final static String FILE_PATH        = "/root/yolkfiles/";
+    private final static String USER_SESSION_KEY = "userSessionId";
 
     /**
      * 构建json格式的返回结果
@@ -32,8 +40,37 @@ public class BaseController {
         return JSON.toJSONString(new BaseResult(success, null, msg));
     }
 
-    protected void writeFile(MultipartFile multipartFile,
-                             String username) throws IllegalStateException, IOException {
+    /**
+     * 从session中获取当前用户
+     */
+    protected User getUserFromRequest(HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession();
+        ParamChecker.notNull(session, SYSTEM_ERROR);
+        User user = (User) session.getAttribute(USER_SESSION_KEY);
+        return user;
+    }
+
+    /**
+     * 将用户保存到session
+     */
+    protected void login(User user, HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession();
+        ParamChecker.notNull(session, SYSTEM_ERROR);
+        session.setAttribute(USER_SESSION_KEY, user);
+    }
+
+    /**
+     * 用户登出  将用户从session中移除
+     */
+    protected void logout(HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession();
+        ParamChecker.notNull(session, SYSTEM_ERROR);
+        session.removeAttribute(USER_SESSION_KEY);
+    }
+
+    protected void writeFile(MultipartFile multipartFile, String username)
+                                                                          throws IllegalStateException,
+                                                                          IOException {
         if (multipartFile != null) {
             createFolder(username);
             //取得当前上传文件的文件名称  
@@ -42,7 +79,7 @@ public class BaseController {
             if (myFileName.trim() != "") {
                 System.out.println(myFileName);
                 //重命名上传后的文件名  
-                String fileName = filePath + username + "/" + multipartFile.getOriginalFilename();
+                String fileName = FILE_PATH + username + "/" + multipartFile.getOriginalFilename();
                 //定义上传路径  
                 String path = "H:/" + fileName;
                 File localFile = new File(path);
@@ -55,13 +92,13 @@ public class BaseController {
      * 创建文件夹 文件夹名称为当前日期
      */
     private void createFolder(String username) {
-        File file = new File(filePath + username);
+        File file = new File(FILE_PATH + username);
         if (file.exists() && file.isDirectory()) {
             return;
         }
         if (file.mkdir()) {
             return;
         }
-        throw new RuntimeException("创建文件夹失败");
+        throw new RuntimeException("create folder error!");
     }
 }

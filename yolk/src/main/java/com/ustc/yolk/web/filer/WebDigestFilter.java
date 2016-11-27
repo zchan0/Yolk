@@ -2,7 +2,7 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2016 All Rights Reserved.
  */
-package com.ustc.yolk.web;
+package com.ustc.yolk.web.filer;
 
 import java.io.IOException;
 import java.util.Enumeration;

@@ -30,8 +30,7 @@ public class PictureController extends BaseController {
                                     @RequestParam(value = "username", required = false) String username) {
         try {
             ParamChecker.notBlank("username", username);
-            ParamChecker.assertCondition(req instanceof MultipartHttpServletRequest,
-                "system error!");
+            ParamChecker.assertCondition(req instanceof MultipartHttpServletRequest, SYSTEM_ERROR);
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
             MultipartFile imgFile1 = multipartRequest.getFile("img");
             writeFile(imgFile1, username);
