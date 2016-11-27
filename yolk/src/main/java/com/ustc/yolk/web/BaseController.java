@@ -4,14 +4,6 @@
  */
 package com.ustc.yolk.web;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.ustc.yolk.model.Constants;
 import com.ustc.yolk.model.User;
 import com.ustc.yolk.serialize.DefaultObjectSerializer;
@@ -19,6 +11,12 @@ import com.ustc.yolk.serialize.ObjectSerializer;
 import com.ustc.yolk.serialize.SerializeFactory;
 import com.ustc.yolk.utils.common.BaseResult;
 import com.ustc.yolk.utils.common.ParamChecker;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * controller公用方法
@@ -28,10 +26,10 @@ import com.ustc.yolk.utils.common.ParamChecker;
  */
 public class BaseController implements Constants {
 
-    private final static String           FILE_PATH        = "/root/yolkfiles/";
-    private final static String           USER_SESSION_KEY = "userSessionId";
-    private final static ObjectSerializer SERIALIZER       = SerializeFactory
-                                                               .getSerializer(DefaultObjectSerializer.class);
+    private final static String FILE_PATH = "/root/yolkfiles/";
+    private final static String USER_SESSION_KEY = "userSessionId";
+    private final static ObjectSerializer SERIALIZER = SerializeFactory
+            .getSerializer(DefaultObjectSerializer.class);
 
     /**
      * 构建json格式的返回结果
@@ -52,7 +50,7 @@ public class BaseController implements Constants {
         ParamChecker.notNull(session, SYSTEM_ERROR);
         Object userObject = session.getAttribute(USER_SESSION_KEY);
         if (userObject == null) {
-            return null;
+            throw new RuntimeException("please login first!");
         }
         ParamChecker.assertCondition(userObject instanceof User, SYSTEM_ERROR);
         return (User) userObject;
@@ -77,8 +75,8 @@ public class BaseController implements Constants {
     }
 
     protected void writeFile(MultipartFile multipartFile, String username)
-                                                                          throws IllegalStateException,
-                                                                          IOException {
+            throws IllegalStateException,
+            IOException {
         if (multipartFile != null) {
             createFolder(username);
             //取得当前上传文件的文件名称  

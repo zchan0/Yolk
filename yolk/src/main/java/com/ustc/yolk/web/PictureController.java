@@ -1,18 +1,17 @@
 package com.ustc.yolk.web;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.ustc.yolk.model.User;
+import com.ustc.yolk.utils.common.ParamChecker;
+import com.ustc.yolk.utils.log.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.ustc.yolk.utils.common.ParamChecker;
-import com.ustc.yolk.utils.log.LoggerUtils;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Administrator on 2016/11/5.
@@ -26,14 +25,13 @@ public class PictureController extends BaseController {
 
     @RequestMapping(value = "add.json")
     @ResponseBody
-    public String addServerResource(HttpServletRequest req,
-                                    @RequestParam(value = "username", required = false) String username) {
+    public String addPic(HttpServletRequest req) {
         try {
-            ParamChecker.notBlank("username", username);
+            User user = getUserFromRequest(req);
             ParamChecker.assertCondition(req instanceof MultipartHttpServletRequest, SYSTEM_ERROR);
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
             MultipartFile imgFile1 = multipartRequest.getFile("img");
-            writeFile(imgFile1, username);
+            writeFile(imgFile1, user.getUsername());
             return wrapResult(true, null);
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "upload picture error!");
