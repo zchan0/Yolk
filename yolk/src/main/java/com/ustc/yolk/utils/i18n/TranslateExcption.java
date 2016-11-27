@@ -5,6 +5,9 @@ package com.ustc.yolk.utils.i18n;
  */
 public class TranslateExcption extends Exception {
 
+    /**  */
+    private static final long serialVersionUID = 7049874741359940936L;
+
     public TranslateExcption(String message) {
         super(message);
     }

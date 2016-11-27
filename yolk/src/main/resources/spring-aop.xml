@@ -3,7 +3,7 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="digestInteceptor" class="com.zhangwei.learning.utils.digest.DigestInterceptor"/>
-    <bean class="com.yolk.utils.common">
+    <bean class="com.yolk.utils.common.aop.ExtBeanNameAutoProxyCreator">
         <property name="order" value="90"></property>
         <property name="interceptorNames">
             <list>

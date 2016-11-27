@@ -1,24 +1,28 @@
 package com.ustc.yolk.utils.aop;
 
-import com.google.common.collect.Lists;
-import com.ustc.yolk.utils.log.LoggerUtils;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.util.PatternMatchUtils;
 
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.ustc.yolk.utils.log.LoggerUtils;
 
 /**
  * 对spring现有的
  */
 public class ExtBeanNameAutoProxyCreator extends BeanNameAutoProxyCreator {
 
+    /**  */
+    private static final long         serialVersionUID = -1157967654675944245L;
+
     /**
      * logger
      */
-    protected final static Logger logger = LoggerFactory
-            .getLogger(ExtBeanNameAutoProxyCreator.class);
+    protected final static Logger     logger           = LoggerFactory
+                                                           .getLogger(ExtBeanNameAutoProxyCreator.class);
 
     private final static List<String> ignoredBeanNames = Lists.newArrayList();
 
