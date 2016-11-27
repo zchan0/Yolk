@@ -81,14 +81,10 @@ public class BaseController implements Constants {
             createFolder(username);
             //取得当前上传文件的文件名称  
             String myFileName = multipartFile.getOriginalFilename();
-            //如果名称不为“”,说明该文件存在，否则说明该文件不存在  
+            //如果名称不为“”,说明该文件存在，否则说明该文件不存在
             if (myFileName.trim() != "") {
-                System.out.println(myFileName);
-                //重命名上传后的文件名  
-                String fileName = FILE_PATH + username + "/" + multipartFile.getOriginalFilename();
-                //定义上传路径  
-                String path = "H:/" + fileName;
-                File localFile = new File(path);
+                String filePath = FILE_PATH + username + "/" + multipartFile.getOriginalFilename();
+                File localFile = new File(filePath);
                 multipartFile.transferTo(localFile);
             }
         }

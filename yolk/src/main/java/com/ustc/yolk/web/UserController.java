@@ -66,7 +66,7 @@ public class UserController extends BaseController {
             user.setPasswdWithEncrypt(password);
             userService.register(user);
             //注册后直接将用户登录信息放到session中
-            login(user, req);
+            super.login(user, req);
             return wrapResult(true, null);
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "register error!");
