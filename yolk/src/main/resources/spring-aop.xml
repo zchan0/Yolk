@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="digestInteceptor" class="com.zhangwei.learning.utils.digest.DigestInterceptor"/>
+    <bean class="com.yolk.utils.common">
+        <property name="order" value="90"></property>
+        <property name="interceptorNames">
+            <list>
+                <value>digestInteceptor</value>
+            </list>
+        </property>
+        <property name="beanNames">
+            <value>*</value>
+        </property>
+        <!--使用cglib作为动态代理-->
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+</beans>

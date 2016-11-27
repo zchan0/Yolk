@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!-- 控制台输出日志 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd:mm:ss} %-5level %logger{36} >>> %msg-%X{traceId}%n</pattern>
+        </encoder>
+    </appender>
+    <!--<appender name="fileAppender" class="ch.qos.logback.core.FileAppender">-->
+    <!--<encoder>-->
+    <!--<pattern>%d{dd:mm:ss} %-5level %logger{36} >>> %msg-%X{traceId}%n</pattern>-->
+    <!--</encoder>-->
+    <!--</appender>-->
+    <!--指定logger name为包名或类全名 指定级别 additivity设置是否传递到root logger -->
+    <logger name="slf4j" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <!--slf4j2包下的类在ERROR级别时候传递到root logger中-->
+    <logger name="slf4j2" level="INFO"/>
+    <!--根logger控制-->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

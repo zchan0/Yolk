@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+    <typeAlias alias="Test" type="com.zhangwei.learning.model.TestDo"/>
+    <sql id="limit" >
+        <![CDATA[LIMIT 1]]>
+    </sql>
+    <sql id="select" >
+        SELECT * FROM aa
+    </sql>
+
+    <select id="selectAll" resultClass="Test">
+        <include refid="select"/>
+    </select>
+
+    <select id="selectRankWithLimit" resultClass="Test">
+        SELECT * FROM aa LIMIT #rank#
+    </select>
+	<!-- <insert id="insert">insert </insert> -->
+</sqlMap>
