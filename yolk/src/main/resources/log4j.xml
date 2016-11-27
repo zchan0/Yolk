@@ -10,12 +10,6 @@
             <param name="LevelMax" value="ERROR"/>
             <param name="LevelMin" value="info"/>
         </filter>
-        <filter class="com.zhangwei.learning.utils.log.LogSendFilter">
-            <param name="sendSize" value="0"/>
-            <param name="systemName" value="test"/>
-            <param name="logServerAddress" value="http://server:8080/DataReceiver/"/>
-            <param name="active" value="false"/>
-        </filter>
     </appender>
     <root>
         <priority value="debug"/>
