@@ -2,8 +2,8 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="digestInteceptor" class="com.zhangwei.learning.utils.digest.DigestInterceptor"/>
-    <bean class="com.yolk.utils.common.aop.ExtBeanNameAutoProxyCreator">
+    <bean id="digestInteceptor" class="com.ustc.yolk.utils.digest.DigestInterceptor"/>
+    <bean class="com.ustc.yolk.utils.aop.ExtBeanNameAutoProxyCreator">
         <property name="order" value="90"></property>
         <property name="interceptorNames">
             <list>

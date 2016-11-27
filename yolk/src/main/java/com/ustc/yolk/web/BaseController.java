@@ -12,9 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSON;
 import com.ustc.yolk.model.Constants;
 import com.ustc.yolk.model.User;
+import com.ustc.yolk.serialize.DefaultObjectSerializer;
+import com.ustc.yolk.serialize.ObjectSerializer;
+import com.ustc.yolk.serialize.SerializeFactory;
 import com.ustc.yolk.utils.common.BaseResult;
 import com.ustc.yolk.utils.common.ParamChecker;
 
@@ -26,8 +28,10 @@ import com.ustc.yolk.utils.common.ParamChecker;
  */
 public class BaseController implements Constants {
 
-    private final static String FILE_PATH        = "/root/yolkfiles/";
-    private final static String USER_SESSION_KEY = "userSessionId";
+    private final static String           FILE_PATH        = "/root/yolkfiles/";
+    private final static String           USER_SESSION_KEY = "userSessionId";
+    private final static ObjectSerializer SERIALIZER       = SerializeFactory
+                                                               .getSerializer(DefaultObjectSerializer.class);
 
     /**
      * 构建json格式的返回结果
@@ -37,7 +41,7 @@ public class BaseController implements Constants {
      * @return 返回给前端的JSON字符串
      */
     protected String wrapResult(boolean success, String msg) {
-        return JSON.toJSONString(new BaseResult(success, null, msg));
+        return SERIALIZER.serialize(new BaseResult(success, null, msg));
     }
 
     /**
