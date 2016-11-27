@@ -18,34 +18,57 @@ public class User {
     /*用户名*/
     private String username;
     /*密码 这里是加密过后的密码*/
-    private String password;
+    private String encryptedPasswd;
 
-    /*校验密码是否正确*/
+    /**
+     * Check password boolean.
+     *
+     * @param passwd the passwd
+     * @return the boolean
+     */
+/*校验密码是否正确*/
     public boolean checkPassword(String passwd) {
-        String decryptedPasswd = RSAUtil.decrypt(password);
+        String decryptedPasswd = RSAUtil.decrypt(encryptedPasswd);
         if (StringUtils.equals(decryptedPasswd, passwd)) {
             return true;
         }
         return false;
     }
 
-    /*将密码做加密并且set*/
+    /**
+     * Sets passwd with encrypt.
+     *
+     * @param password the password
+     */
+/*将密码做加密并且set*/
     public void setPasswdWithEncrypt(String password) {
-        this.password = RSAUtil.encrypt(password);
+        this.encryptedPasswd = RSAUtil.encrypt(password);
     }
 
     /**
      * Instantiates a new User.
      *
-     * @param username the username
-     * @param password the password
+     * @param username        the username
+     * @param encryptedPasswd the encryptedPasswd
      */
-    public User(String username, String password) {
+    public User(String username, String encryptedPasswd) {
         this.username = username;
-        this.password = password;
+        this.encryptedPasswd = encryptedPasswd;
     }
 
+    /**
+     * Instantiates a new User.
+     */
     public User() {
+    }
+
+    /**
+     * Sets encrypted passwd.
+     *
+     * @param encryptedPasswd the encrypted passwd
+     */
+    public void setEncryptedPasswd(String encryptedPasswd) {
+        this.encryptedPasswd = encryptedPasswd;
     }
 
     /**
@@ -55,15 +78,6 @@ public class User {
      */
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    /**
-     * Sets password.
-     *
-     * @param password the password
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
