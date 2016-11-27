@@ -4,7 +4,9 @@
  */
 package com.ustc.yolk.web.filer;
 
+import com.ustc.yolk.utils.TraceUtils;
 import com.ustc.yolk.utils.log.LoggerUtils;
+import org.apache.log4j.NDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +39,10 @@ public class WebDigestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException,
             ServletException {
-
+        NDC.push(TraceUtils.generateId());
         if (!(request instanceof HttpServletRequest)) {
             chain.doFilter(request, response);
+            NDC.pop();
             return;
         }
         HttpServletRequest servletRequest = (HttpServletRequest) request;
@@ -61,6 +64,7 @@ public class WebDigestFilter implements Filter {
     private void log(String uri, String params, long start) {
         LoggerUtils.info(LOGGER, "webDigest-", "[", uri, "][", params, "]", "[cost=",
                 (System.currentTimeMillis() - start), "ms]");
+        NDC.pop();
     }
 
     private String getInputParams(HttpServletRequest servletRequest) {

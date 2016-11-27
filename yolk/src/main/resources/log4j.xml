@@ -11,6 +11,23 @@
             <param name="LevelMin" value="info"/>
         </filter>
     </appender>
+    <appender name="fileLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="/root/log.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%x%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="info"/>
+            <param name="LevelMax" value="ERROR"/>
+        </filter>
+    </appender>
+    <logger name="study.log4j.sample" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="fileLog"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
     <root>
         <priority value="debug"/>
         <appender-ref ref="CONSOLE"/>
