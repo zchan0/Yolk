@@ -4,16 +4,18 @@
  */
 package com.ustc.yolk.web;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.ustc.yolk.model.Constants;
 import com.ustc.yolk.model.User;
 import com.ustc.yolk.serialize.DefaultObjectSerializer;
 import com.ustc.yolk.serialize.ObjectSerializer;
 import com.ustc.yolk.serialize.SerializeFactory;
-import com.ustc.yolk.utils.common.BaseResult;
 import com.ustc.yolk.utils.common.ParamChecker;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * controller公用方法
@@ -32,14 +34,26 @@ public class BaseController implements Constants {
      *
      * @param success 是否成功
      * @param msg     错误信息 success=true时为null
+     * @param ext     额外的信息 这里是key-value形式, 奇数为key 偶数为value
      * @return 返回给前端的JSON字符串
      */
-    protected static String wrapResult(boolean success, String msg) {
-        return SERIALIZER.serialize(new BaseResult(success, null, msg));
+    protected static String wrapResult(boolean success, String msg, Object... ext) {
+        Map<String, String> result = Maps.newHashMap();
+        result.put(SUCCESS, String.valueOf(success));
+        result.put(errorMsg, msg);
+        String key = null;
+        for (int i = 1; i <= ext.length; i++) {
+            if (i % 2 == 1) {
+                key = JSON.toJSONString(ext[i]);
+            } else {
+                result.put(key, JSON.toJSONString(ext[i]));
+            }
+        }
+        return SERIALIZER.serialize(JSON.toJSONString(result));
     }
 
-    protected static String wrapSuccessResult() {
-        return wrapResult(true, null);
+    protected static String wrapSuccessResult(Object... ext) {
+        return wrapResult(true, null, ext);
     }
 
     /**

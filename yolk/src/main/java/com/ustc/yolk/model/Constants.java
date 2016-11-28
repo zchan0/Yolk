@@ -8,5 +8,17 @@ package com.ustc.yolk.model;
  */
 public interface Constants {
 
+    String DOU_HAO = ",";
+    String LEFT_KUOHAO = "(";
+    String RIGHT_KUOHAO = ")";
+    String EMPTY_STRING = "";
+    String NULL_STRING = "NULL";
+    String JIAN_KUOHAO = "^";
+    String SUCCESS = "success";
+    String KONG = "-";
+    String VOID = "-";
+    String SYSTEM_NAME = "test";
+    String NORMAL = "NORMAL";
+    String errorMsg = "errorMsg";
     String SYSTEM_ERROR = "system error!";
 }
