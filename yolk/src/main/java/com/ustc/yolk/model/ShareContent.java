@@ -18,11 +18,21 @@ public class ShareContent extends ToString {
     private Date createTime;
     /*上传的用户的username*/
     private String sharedByUsername;
+    /*是否是公开的*/
+    private boolean public0 = false;
 
     /**
      * Instantiates a new Share content.
      */
     public ShareContent() {
+    }
+
+    public boolean isPublic0() {
+        return public0;
+    }
+
+    public void setPublic0(boolean public0) {
+        this.public0 = public0;
     }
 
     /**
