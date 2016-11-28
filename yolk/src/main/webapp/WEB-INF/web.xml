@@ -17,6 +17,10 @@
             <param-name>redirectUrl</param-name>
             <param-value>index.html</param-value>
         </init-param>
+        <init-param>
+            <param-name>appName</param-name>
+            <param-value>yolk</param-value>
+        </init-param>
     </filter>
     <servlet>
         <servlet-name>springmvc</servlet-name>

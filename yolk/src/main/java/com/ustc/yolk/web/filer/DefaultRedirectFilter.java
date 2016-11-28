@@ -1,5 +1,7 @@
 package com.ustc.yolk.web.filer;
 
+import com.ustc.yolk.utils.common.ParamChecker;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,12 +12,16 @@ import java.io.IOException;
  */
 public class DefaultRedirectFilter implements Filter {
     private String url;
+    private String appName;
     private final static String urlKey = "redirectUrl";
+    private final static String appNameKey = "appName";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        String url = filterConfig.getInitParameter(urlKey);
-        this.url = url;
+        url = filterConfig.getInitParameter(urlKey);
+        appName = filterConfig.getInitParameter(appNameKey);
+        ParamChecker.notBlank(urlKey, url);
+        ParamChecker.notBlank(appNameKey, appName);
     }
 
     @Override
@@ -26,7 +32,7 @@ public class DefaultRedirectFilter implements Filter {
         }
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        if (servletRequest.getRequestURI().equals("/")) {
+        if (servletRequest.getRequestURI().equals("/" + appName) || servletRequest.getRequestURI().equals("/" + appName + "/")) {
             servletResponse.sendRedirect(url);
             return;
         }
