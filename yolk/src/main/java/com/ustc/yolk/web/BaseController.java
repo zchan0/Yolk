@@ -11,12 +11,9 @@ import com.ustc.yolk.serialize.ObjectSerializer;
 import com.ustc.yolk.serialize.SerializeFactory;
 import com.ustc.yolk.utils.common.BaseResult;
 import com.ustc.yolk.utils.common.ParamChecker;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * controller公用方法
@@ -26,7 +23,6 @@ import java.io.IOException;
  */
 public class BaseController implements Constants {
 
-    private final static String FILE_PATH = "/root/yolkfiles/";
     private final static String USER_SESSION_KEY = "userSessionId";
     private final static ObjectSerializer SERIALIZER = SerializeFactory
             .getSerializer(DefaultObjectSerializer.class);
@@ -74,33 +70,4 @@ public class BaseController implements Constants {
         session.removeAttribute(USER_SESSION_KEY);
     }
 
-    protected void writeFile(MultipartFile multipartFile, String username)
-            throws IllegalStateException,
-            IOException {
-        if (multipartFile != null) {
-            createFolder(username);
-            //取得当前上传文件的文件名称  
-            String myFileName = multipartFile.getOriginalFilename();
-            //如果名称不为“”,说明该文件存在，否则说明该文件不存在
-            if (myFileName.trim() != "") {
-                String filePath = FILE_PATH + username + "/" + multipartFile.getOriginalFilename();
-                File localFile = new File(filePath);
-                multipartFile.transferTo(localFile);
-            }
-        }
-    }
-
-    /**
-     * 创建文件夹 文件夹名称为当前日期
-     */
-    private void createFolder(String username) {
-        File file = new File(FILE_PATH + username);
-        if (file.exists() && file.isDirectory()) {
-            return;
-        }
-        if (file.mkdir()) {
-            return;
-        }
-        throw new RuntimeException("create folder error!");
-    }
 }
