@@ -44,7 +44,7 @@ public class UserController extends BaseController {
             }
             //将用户登录信息放到session中
             super.login(user, req);
-            return wrapResult(true, null);
+            return wrapSuccessResult();
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "login error!");
             return wrapResult(false, e.getMessage());
@@ -67,7 +67,7 @@ public class UserController extends BaseController {
             userService.register(user);
             //注册后直接将用户登录信息放到session中
             super.login(user, req);
-            return wrapResult(true, null);
+            return wrapSuccessResult();
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "register error!");
             return wrapResult(false, e.getMessage());
@@ -79,7 +79,7 @@ public class UserController extends BaseController {
     public String logout0(HttpServletRequest req) {
         try {
             super.logout(req);
-            return wrapResult(true, null);
+            return wrapSuccessResult();
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "logout error!");
             return wrapResult(false, e.getMessage());

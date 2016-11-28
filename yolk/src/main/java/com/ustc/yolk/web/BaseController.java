@@ -34,8 +34,12 @@ public class BaseController implements Constants {
      * @param msg     错误信息 success=true时为null
      * @return 返回给前端的JSON字符串
      */
-    protected String wrapResult(boolean success, String msg) {
+    protected static String wrapResult(boolean success, String msg) {
         return SERIALIZER.serialize(new BaseResult(success, null, msg));
+    }
+
+    protected static String wrapSuccessResult() {
+        return wrapResult(true, null);
     }
 
     /**

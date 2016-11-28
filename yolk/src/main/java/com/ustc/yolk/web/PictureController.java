@@ -47,7 +47,7 @@ public class PictureController extends BaseController {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
             MultipartFile imgFile1 = multipartRequest.getFile("img");
             writeFile(imgFile1, user.getUsername());
-            return wrapResult(true, null);
+            return wrapSuccessResult();
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "upload picture error!");
             return wrapResult(false, e.getMessage());
