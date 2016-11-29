@@ -7,9 +7,17 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <filter>
-        <filter-name>digestFilter</filter-name>
-        <filter-class>com.ustc.yolk.web.filer.WebDigestFilter</filter-class>
+        <filter-name>webInvoke</filter-name>
+        <filter-class>com.ustc.yolk.utils.invoke.WebInvokeInteceptor</filter-class>
+        <init-param>
+            <param-name>ignoreLists</param-name>
+            <param-value>.jpg,.png,.css,.js,.js.map,.ico</param-value>
+        </init-param>
     </filter>
+    <filter-mapping>
+        <filter-name>webInvoke</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>redirector</filter-name>
         <filter-class>com.ustc.yolk.web.filer.DefaultRedirectFilter</filter-class>
@@ -27,10 +35,6 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <filter-mapping>
-        <filter-name>digestFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     <filter-mapping>
         <filter-name>redirector</filter-name>
         <url-pattern>/</url-pattern>
