@@ -86,7 +86,7 @@ public class WebInvokeInteceptor implements Filter, InvokeContanst {
             //获取到buffer 然后从buffer中获取到返回值
             Object result = ReflectUtil.getFiledValue(contentHolder, "outputChunk");
             String resultString = result == null ? StringUtils.EMPTY : result.toString();
-            if (resultString.startsWith("<html>")) {
+            if (StringUtils.startsWith(resultString, "<html>")) {
                 //含有html文本
                 return "HTML-CONTENT";
             }

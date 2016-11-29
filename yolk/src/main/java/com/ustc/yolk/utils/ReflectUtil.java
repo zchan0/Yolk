@@ -13,13 +13,9 @@ public class ReflectUtil {
     public static Field getFiled(Class<?> clazz, String fieldName) throws NoSuchFieldException {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            boolean isAccessible = field.isAccessible();
-            field.setAccessible(true);
             if (StringUtils.equals(fieldName, field.getName())) {
-                field.setAccessible(isAccessible);
                 return field;
             }
-            field.setAccessible(isAccessible);
         }
         throw new NoSuchFieldException(fieldName);
     }
