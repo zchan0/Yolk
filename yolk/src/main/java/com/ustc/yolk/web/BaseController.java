@@ -44,9 +44,9 @@ public class BaseController implements Constants {
         String key = null;
         for (int i = 1; i <= ext.length; i++) {
             if (i % 2 == 1) {
-                key = JSON.toJSONString(ext[i]);
+                key = JSON.toJSONString(ext[i - 1]);
             } else {
-                result.put(key, JSON.toJSONString(ext[i]));
+                result.put(key, JSON.toJSONString(ext[i - 1]));
             }
         }
         return SERIALIZER.serialize(JSON.toJSONString(result));

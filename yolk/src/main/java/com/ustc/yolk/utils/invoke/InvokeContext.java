@@ -67,7 +67,7 @@ public abstract class InvokeContext<T extends InvokeContext> implements Serializ
         for (Map.Entry<String, V> entry : map.entrySet()) {
             stringBuilder.append(entry.getKey()).append(SPLITE_ARROW);
             V value = entry.getValue();
-            String valueString = value.toString();
+            String valueString = value == null ? StringUtils.EMPTY : value.toString();
             if (valueString.length() > 512) {
                 valueString = StringUtils.substring(valueString, 0, 511);
                 stringBuilder.append(valueString).append("....");
