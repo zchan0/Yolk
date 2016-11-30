@@ -16,6 +16,9 @@ public interface ShareContentService {
     /*查询最新的大家分享的内容*/
     List<ShareContent> queryRecentPubContents(int start, int counts);
 
+    /*查询自己发布的内容*/
+    List<ShareContent> queryMyRecentContents(String username, int start, int counts);
+
     /*分享内容 这里会校验用户是否一致*/
     void share(long id, User user);
 

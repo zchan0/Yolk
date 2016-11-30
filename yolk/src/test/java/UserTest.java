@@ -14,7 +14,7 @@ public class UserTest extends BaseTestSupport {
             UserService userService = springContext.getBean(UserService.class);
             ParamChecker.notNull(userService, "获取userservice Bean失败");
             User user = new User();
-            user.setUsername("test");
+            user.setUsername("aaa");
             user.encryptPasswd("test");
             userService.register(user);
             User qUser = userService.getUser("test");

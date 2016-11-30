@@ -6,12 +6,18 @@
     <typeAlias alias="ShareContentDO" type="com.ustc.yolk.model.ShareContentDO"/>
     <typeAlias alias="Long" type="java.lang.Long"/>
     <select id="queryById" parameterClass="Long" resultClass="ShareContentDO">
-        SELECT * FROM  share_content WHERE shareID=#id#
+        SELECT * FROM  share_content WHERE shareID=#shareID#
     </select>
     <insert id="insertShareContent" parameterClass="ShareContentDO">
         <![CDATA[INSERT INTO share_content(username,createTime,content,isPublic) VALUES (#username#,current_timestamp,#content#,#isPublic#)]]>
-        <selectKey resultClass="long" keyProperty="id">
+        <selectKey resultClass="long" keyProperty="shareID">
             <![CDATA[SELECT LAST_INSERT_ID() AS ID ]]>
         </selectKey>
     </insert>
+    <select id="queryByUsernameForPage" parameterClass="String" resultClass="ShareContentDO">
+        SELECT * FROM  share_content WHERE username=#username# ORDER BY shareID DESC
+    </select>
+    <select id="queryForPage" parameterClass="String" resultClass="ShareContentDO">
+        SELECT * FROM  share_content WHERE isPublic=1 ORDER BY shareID DESC
+    </select>
 </sqlMap>

@@ -7,18 +7,18 @@ import java.util.Date;
  */
 public class ShareContentDO {
 
-    private long id;
+    private long shareID;
     private String username;
     private Date createDate;
     private String content;
     private int isPublic;
 
-    public long getId() {
-        return id;
+    public long getShareID() {
+        return shareID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setShareID(long shareID) {
+        this.shareID = shareID;
     }
 
     public String getUsername() {

@@ -13,5 +13,5 @@
     <select id="queryWithLock" parameterClass="String" resultClass="UserDO">
         SELECT * FROM User WHERE username=#username# FOR UPDATE
     </select>
-    <!-- <insert id="insert">insert </insert> -->
+    <!-- <insert shareID="insert">insert </insert> -->
 </sqlMap>
