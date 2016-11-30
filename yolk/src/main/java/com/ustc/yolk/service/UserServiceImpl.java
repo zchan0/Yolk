@@ -1,10 +1,10 @@
 package com.ustc.yolk.service;
 
-import com.google.common.collect.Maps;
+import com.ustc.yolk.dal.UserDAO;
 import com.ustc.yolk.model.User;
+import com.ustc.yolk.model.UserDO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Created by Administrator on 2016/11/27.
@@ -12,24 +12,25 @@ import java.util.Map;
 @Component
 public class UserServiceImpl implements UserService {
 
-    private final static Map<String, User> temp = Maps.newConcurrentMap();
-
-    static {
-        //初始化一个用户进去
-        User user = new User();
-        user.setUsername("test");
-        user.setPasswdWithEncrypt("test");
-        temp.put("test", user);
-    }
-
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public User getUser(String username) {
-        return temp.get(username);
+        UserDO uDO = userDAO.query(username);
+        if (uDO == null) {
+            return null;
+        }
+        User user = new User(uDO.getUsername());
+        user.setEncryptedPasswd(uDO.getPassword());
+        return user;
     }
 
     @Override
     public void register(User user) {
-        temp.put(user.getUsername(), user);
+        UserDO userDO = new UserDO();
+        userDO.setUsername(user.getUsername());
+        userDO.setPassword(user.getEncryptedPasswd());
+        userDAO.insert(userDO);
     }
 }

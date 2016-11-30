@@ -18,4 +18,7 @@ public interface ShareContentService {
 
     /*分享内容 这里会校验用户是否一致*/
     void share(long id, User user);
+
+    /*新增内容 但是不分享*/
+    long add(ShareContent shareContent);
 }

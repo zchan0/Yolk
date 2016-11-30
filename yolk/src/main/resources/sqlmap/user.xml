@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+    <typeAlias alias="String" type="java.lang.String"/>
+    <typeAlias alias="UserDO" type="com.ustc.yolk.model.UserDO"/>
+    <select id="queryByUsername" parameterClass="String" resultClass="UserDO">
+        SELECT * FROM User WHERE username=#username#
+    </select>
+    <insert id="insertUserDO" parameterClass="UserDO">
+        INSERT INTO User(username,password) VALUES (#username#,#password#)
+    </insert>
+    <select id="queryWithLock" parameterClass="String" resultClass="UserDO">
+        SELECT * FROM User WHERE username=#username# FOR UPDATE
+    </select>
+    <!-- <insert id="insert">insert </insert> -->
+</sqlMap>

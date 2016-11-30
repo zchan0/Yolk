@@ -5,7 +5,7 @@
     <!-- 引用JDBC属性的配置文件 -->
     <properties resource="SqlMap.properties"/>
     <!-- 延迟加载  使用高速缓存模型   使用cglib优化延迟加载性能 -->
-    <settings lazyLoadingEnabled="true" cacheModelsEnabled="true" enhancementEnabled="true" ></settings>
+    <settings lazyLoadingEnabled="true" cacheModelsEnabled="true" enhancementEnabled="true"></settings>
     <!-- 使用JDBC的事务管理 -->
     <transactionManager type="JDBC" commitRequired="true">
         <!-- 数据源 -->
@@ -19,5 +19,6 @@
     <!--自定义类型处理器-->
     <!--<typeHandler javaType="" callback=""></typeHandler>-->
     <!-- 这里可以写多个实体的映射文件 -->
-    <sqlMap resource="sqlmap/test.xml"/>
+    <sqlMap resource="sqlmap/user.xml"/>
+    <sqlMap resource="sqlmap/sharecontent.xml"/>
 </sqlMapConfig>

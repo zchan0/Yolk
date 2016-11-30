@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+    <typeAlias alias="String" type="java.lang.String"/>
+    <typeAlias alias="ShareContentDO" type="com.ustc.yolk.model.ShareContentDO"/>
+    <typeAlias alias="Long" type="java.lang.Long"/>
+    <select id="queryById" parameterClass="Long" resultClass="ShareContentDO">
+        SELECT * FROM  share_content WHERE shareID=#id#
+    </select>
+    <insert id="insertShareContent" parameterClass="ShareContentDO">
+        <![CDATA[INSERT INTO share_content(username,createTime,content,isPublic) VALUES (#username#,current_timestamp,#content#,#isPublic#)]]>
+        <selectKey resultClass="long" keyProperty="id">
+            <![CDATA[SELECT LAST_INSERT_ID() AS ID ]]>
+        </selectKey>
+    </insert>
+</sqlMap>

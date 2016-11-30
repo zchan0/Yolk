@@ -13,6 +13,11 @@ public class SingleContent extends ToString {
     public SingleContent() {
     }
 
+    public SingleContent(String picName, String text) {
+        this.picName = picName;
+        this.text = text;
+    }
+
     /**
      * Gets pic name.
      *

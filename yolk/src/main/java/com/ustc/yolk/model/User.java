@@ -20,13 +20,7 @@ public class User {
     /*密码 这里是加密过后的密码*/
     private String encryptedPasswd;
 
-    /**
-     * Check password boolean.
-     *
-     * @param passwd the passwd
-     * @return the boolean
-     */
-/*校验密码是否正确*/
+    /*校验密码是否正确*/
     public boolean checkPassword(String passwd) {
         String decryptedPasswd = RSAUtil.decrypt(encryptedPasswd);
         if (StringUtils.equals(decryptedPasswd, passwd)) {
@@ -35,25 +29,18 @@ public class User {
         return false;
     }
 
-    /**
-     * Sets passwd with encrypt.
-     *
-     * @param password the password
-     */
-/*将密码做加密并且set*/
-    public void setPasswdWithEncrypt(String password) {
+    /*将密码做加密并且set*/
+    public void encryptPasswd(String password) {
         this.encryptedPasswd = RSAUtil.encrypt(password);
     }
 
     /**
      * Instantiates a new User.
      *
-     * @param username        the username
-     * @param encryptedPasswd the encryptedPasswd
+     * @param username the username
      */
-    public User(String username, String encryptedPasswd) {
+    public User(String username) {
         this.username = username;
-        this.encryptedPasswd = encryptedPasswd;
     }
 
     /**
@@ -69,6 +56,15 @@ public class User {
      */
     public void setEncryptedPasswd(String encryptedPasswd) {
         this.encryptedPasswd = encryptedPasswd;
+    }
+
+    /**
+     * Gets encrypted passwd.
+     *
+     * @return the encrypted passwd
+     */
+    public String getEncryptedPasswd() {
+        return encryptedPasswd;
     }
 
     /**

@@ -63,7 +63,7 @@ public class UserController extends BaseController {
             //获取用户信息并且校验密码是否正确
             User user = new User();
             user.setUsername(username);
-            user.setPasswdWithEncrypt(password);
+            user.encryptPasswd(password);
             userService.register(user);
             //注册后直接将用户登录信息放到session中
             super.login(user, req);
