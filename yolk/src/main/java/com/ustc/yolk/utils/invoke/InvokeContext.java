@@ -68,7 +68,7 @@ public abstract class InvokeContext<T extends InvokeContext> implements Serializ
             stringBuilder.append(entry.getKey()).append(SPLITE_ARROW);
             V value = entry.getValue();
             String valueString = value == null ? StringUtils.EMPTY : value.toString();
-            if (valueString.length() > 512) {
+            if (valueString.length() > 100) {
                 valueString = StringUtils.substring(valueString, 0, 511);
                 stringBuilder.append(valueString).append("....");
             } else {
