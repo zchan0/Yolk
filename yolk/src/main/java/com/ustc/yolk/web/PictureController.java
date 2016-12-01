@@ -38,7 +38,7 @@ public class PictureController extends BaseController {
     //    private final static String FILE_PATH = "/root/yolkfiles/";
     private final static String FILE_PATH = "C://";
     private final static String[] validPicType = {"jpg", "png", "ico"};
-
+    //TODO 对图片做缓存
 
     @RequestMapping(value = "upload.json")
     @ResponseBody
@@ -56,7 +56,6 @@ public class PictureController extends BaseController {
         }
     }
 
-
     @RequestMapping(value = "download.json")
     public void getImage(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "fileName", required = false) String fileName,
                          @RequestParam(value = "username", required = false) String username) {
@@ -67,11 +66,10 @@ public class PictureController extends BaseController {
             fileName = RSAUtil.decrypt(fileName);
             String[] temp = StringUtils.split(fileName, ".");
             ParamChecker.assertCondition(temp.length == 2, "illegal fileName!");
+            ParamChecker.assertCondition(isValidPicType(temp[1]), "unsupported file type!");
             response.setContentType("image/" + temp[1]);
-//            User user = getUserFromRequest(request);
             OutputStream out = response.getOutputStream();
-            File file = new File(getFilePath(username, fileName));
-            fis = new FileInputStream(file);
+            fis = new FileInputStream(new File(getFilePath(username, fileName)));
             byte[] b = new byte[fis.available()];
             fis.read(b);
             out.write(b);
@@ -83,7 +81,7 @@ public class PictureController extends BaseController {
         }
     }
 
-    /*写图片*/
+    /*写图片 会校验文件名*/
     private void writeFile(MultipartFile multipartFile, String username)
             throws IllegalStateException,
             IOException {
@@ -93,6 +91,7 @@ public class PictureController extends BaseController {
             String myFileName = multipartFile.getOriginalFilename().trim();
             //如果名称不为“”,说明该文件存在，否则说明该文件不存在
             ParamChecker.notBlank("file name", myFileName);
+            ParamChecker.assertCondition(isValidPicType(myFileName), "unsupported file type");
             File localFile = new File(getFilePath(username, parseFileName(username, myFileName)));
             multipartFile.transferTo(localFile);
         }
@@ -124,9 +123,9 @@ public class PictureController extends BaseController {
     }
 
     /*上传的图片类型是否是正确的*/
-    private boolean isValidPicType(String subFix) {
+    private boolean isValidPicType(String fileName) {
         for (String s : validPicType) {
-            if (StringUtils.equals(subFix, s)) {
+            if (StringUtils.equals(fileName, s)) {
                 return true;
             }
         }

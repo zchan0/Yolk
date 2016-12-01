@@ -1,5 +1,8 @@
 package com.ustc.yolk.web;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.ustc.yolk.model.ShareContent;
 import com.ustc.yolk.model.SingleContent;
 import com.ustc.yolk.model.User;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/11/28.
@@ -27,17 +33,12 @@ import java.net.URLEncoder;
 @RequestMapping(value = "/content")
 public class ShareController extends BaseController {
     //日志
-    private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ShareController.class);
 
     @Autowired
     private ShareContentService shareContentService;
 
-    @RequestMapping(value = "upload.json")
-    @ResponseBody
-    public String upload() {
-        return wrapSuccessResult();
-    }
-
+    /*在列表页分享自己发布的内容*/
     @RequestMapping(value = "share.json")
     @ResponseBody
     public String toShare(HttpServletRequest servletRequest, @RequestParam(value = "id", required = false) String id) {
@@ -50,6 +51,59 @@ public class ShareController extends BaseController {
             LoggerUtils.error(LOGGER, e, "share content error!");
             return wrapResult(false, e.getMessage());
         }
+    }
+
+    /*发布内容 默认都是非public的*/
+    @RequestMapping(value = "publish.json")
+    @ResponseBody
+    public String publish(HttpServletRequest servletRequest, @RequestParam(value = "textContent", required = false) String textContent) {
+        try {
+            User user = getUserFromRequest(servletRequest);
+            Map<Integer, String> textContents = null;
+            try {
+                textContents = JSON.parseObject(textContent, HashMap.class);
+            } catch (Exception e) {
+                //ingore
+            }
+            if (textContent == null) {
+                textContents = Maps.newHashMap();
+            }
+            //上传图片
+            Map<Integer, String> pics = uploadPic(servletRequest);
+            ParamChecker.assertCondition(textContents.size() == 0 && pics.size() == 0, "empty content!");
+            LoggerUtils.debug(LOGGER, "发布了文字:", textContents);
+            LoggerUtils.debug(LOGGER, "发布了图片", pics);
+            //对图片和文字做merge
+            List<SingleContent> contents = Lists.newArrayList();
+            for (Map.Entry<Integer, String> entry : textContents.entrySet()) {
+                String picName = pics.get(entry.getKey());
+                String text = entry.getValue();
+                ParamChecker.notBlank(text, "empty text content!");
+                pics.remove(entry.getKey());
+                contents.add(new SingleContent(picName, text));
+            }
+            //未被merge图片的单独处理
+            for (Map.Entry<Integer, String> entry : pics.entrySet()) {
+                String picName = pics.get(entry.getKey());
+                contents.add(new SingleContent(picName, null));
+            }
+
+            ShareContent shareContent = new ShareContent();
+            shareContent.setContents(contents);
+            shareContent.setSharedByUsername(user.getUsername());
+            shareContent.setPublic0(false);
+            shareContentService.add(shareContent);
+            return wrapSuccessResult();
+        } catch (Exception e) {
+            LoggerUtils.error(LOGGER, e, "share content error!");
+            return wrapResult(false, e.getMessage());
+        }
+    }
+
+    /*处理上传的图片*/
+    private Map<Integer, String> uploadPic(HttpServletRequest request) {
+        Map<Integer, String> result = Maps.newHashMap();
+        return result;
     }
 
     /**
@@ -71,6 +125,26 @@ public class ShareController extends BaseController {
             return wrapSuccessResult("shareContent", hidePicName(shareContent));
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "share content error!");
+            return wrapResult(false, e.getMessage());
+        }
+    }
+
+    /**
+     * 查询自己上传的内容
+     */
+    @RequestMapping(value = "batchquery.json")
+    @ResponseBody
+    public String queryMyContent(HttpServletRequest servletRequest, @RequestParam(value = "start", required = false) int start,
+                                 @RequestParam(value = "pagesize", required = false) int pageSize) {
+        try {
+            User user = getUserFromRequest(servletRequest);
+            List<ShareContent> contents = shareContentService.queryMyRecentContents(user.getUsername(), start, pageSize);
+            for (ShareContent content : contents) {
+                hidePicName(content);
+            }
+            return wrapSuccessResult("myContents", contents);
+        } catch (Exception e) {
+            LoggerUtils.error(LOGGER, e, "query my content error!");
             return wrapResult(false, e.getMessage());
         }
     }

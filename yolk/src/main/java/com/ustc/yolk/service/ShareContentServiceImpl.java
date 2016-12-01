@@ -66,6 +66,7 @@ public class ShareContentServiceImpl implements ShareContentService {
         ShareContent content = JSON.parseObject(shareContentDO.getContent(), ShareContent.class);
         content.setPublic0(shareContentDO.getIsPublic() == 1);
         content.setCreateTime(shareContentDO.getCreateDate());
+        content.setId(shareContentDO.getShareID());
         return content;
     }
 

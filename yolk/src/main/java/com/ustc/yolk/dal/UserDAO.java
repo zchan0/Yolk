@@ -24,7 +24,7 @@ public class UserDAO extends BaseDAO {
     public void insert(UserDO userDO) {
         try {
             sqlMapClient.startTransaction();
-            UserDO existedUserDO = (UserDO) sqlMapClient.queryForObject("queryWithLock", userDO.getUsername());
+            UserDO existedUserDO = (UserDO) sqlMapClient.queryForObject("queryUserWithLock", userDO.getUsername());
             if (existedUserDO != null) {
                 throw new RuntimeException("user already exists!");
             }

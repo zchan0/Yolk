@@ -20,4 +20,7 @@
     <select id="queryForPage" parameterClass="String" resultClass="ShareContentDO">
         SELECT * FROM  share_content WHERE isPublic=1 ORDER BY shareID DESC
     </select>
+    <select id="queryContentWithLock" parameterClass="Long" resultClass="ShareContentDO">
+        SELECT * FROM share_content WHERE shareID=#shareID# FOR UPDATE
+    </select>
 </sqlMap>

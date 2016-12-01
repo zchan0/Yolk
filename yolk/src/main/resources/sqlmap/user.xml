@@ -10,7 +10,7 @@
     <insert id="insertUserDO" parameterClass="UserDO">
         INSERT INTO User(username,password) VALUES (#username#,#password#)
     </insert>
-    <select id="queryWithLock" parameterClass="String" resultClass="UserDO">
+    <select id="queryUserWithLock" parameterClass="String" resultClass="UserDO">
         SELECT * FROM User WHERE username=#username# FOR UPDATE
     </select>
     <!-- <insert shareID="insert">insert </insert> -->

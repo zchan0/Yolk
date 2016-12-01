@@ -48,4 +48,8 @@ public class ShareContentDAO extends BaseDAO {
             throw new RuntimeException(e);
         }
     }
+
+    /*将内容设置为是否公开*/
+    public void setPublis(int publis) {
+    }
 }

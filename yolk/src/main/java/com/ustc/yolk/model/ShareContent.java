@@ -11,7 +11,8 @@ import java.util.List;
  * Created by Administrator on 2016/11/28.
  */
 public class ShareContent extends ToString {
-
+    /*内容id*/
+    private long id;
     /*包含的多个图片或者文字*/
     private List<SingleContent> contents = Lists.newArrayList();
     /*上传时间*/
@@ -87,5 +88,13 @@ public class ShareContent extends ToString {
      */
     public void setContents(List<SingleContent> contents) {
         this.contents = contents;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

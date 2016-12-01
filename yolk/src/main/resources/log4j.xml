@@ -4,11 +4,11 @@
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%x%n"/>
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%X{traceId}%n"/>
         </layout> <!--限制输出级别 -->
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMax" value="ERROR"/>
-            <param name="LevelMin" value="info"/>
+            <param name="LevelMin" value="debug"/>
         </filter>
     </appender>
     <appender name="fileLog" class="org.apache.log4j.DailyRollingFileAppender">
@@ -16,7 +16,7 @@
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%x%n"/>
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%X{traceId}%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="info"/>
@@ -24,7 +24,7 @@
         </filter>
     </appender>
     <logger name="com.ustc.yolk" additivity="false">
-        <level value="INFO"/>
+        <level value="DEBUG"/>
         <appender-ref ref="fileLog"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
