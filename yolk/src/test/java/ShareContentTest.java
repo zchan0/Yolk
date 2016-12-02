@@ -22,11 +22,11 @@ public class ShareContentTest extends BaseTestSupport {
                 ParamChecker.notNull(contentService, "获取ShareContentService Bean失败");
                 ShareContent shareContent = new ShareContent();
                 shareContent.setPublic0(false);
-                shareContent.setSharedByUsername("aaa");
+                shareContent.setSharedByUsername("test");
                 List<SingleContent> singleContents = Lists.newArrayList();
                 shareContent.setContents(singleContents);
-                singleContents.add(new SingleContent("哈哈", "www.baidu.com"));
-
+                singleContents.add(new SingleContent("test_201612011939551_0004.jpg", "i am text and pic!"));
+                singleContents.add(new SingleContent(null, "i am pure text!"));
                 long id = contentService.add(shareContent);
             }
 //            print(contentService.queryById(id));

@@ -38,7 +38,7 @@ public class BaseController implements Constants {
      * @return 返回给前端的JSON字符串
      */
     protected static String wrapResult(boolean success, String msg, Object... ext) {
-        Map<String, String> result = Maps.newHashMap();
+        Map<String, Object> result = Maps.newHashMap();
         result.put(SUCCESS, String.valueOf(success));
         result.put(errorMsg, msg);
         String key = null;
@@ -46,7 +46,7 @@ public class BaseController implements Constants {
             if (i % 2 == 1) {
                 key = JSON.toJSONString(ext[i - 1]);
             } else {
-                result.put(key, JSON.toJSONString(ext[i - 1]));
+                result.put(key, ext[i]);
             }
         }
         return SERIALIZER.serialize(JSON.toJSONString(result));
