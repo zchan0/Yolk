@@ -6,10 +6,10 @@
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %p %c %m -%X{traceId}%n"/>
         </layout> <!--限制输出级别 -->
-        <filter class="com.ustc.yolk.utils.log.EnhancedLogFilter"/>
+        <!--<filter class="com.ustc.yolk.utils.log.EnhancedLogFilter"/>-->
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMax" value="ERROR"/>
-            <param name="LevelMin" value="debug"/>
+            <param name="LevelMin" value="info"/>
         </filter>
     </appender>
     <appender name="fileLog" class="org.apache.log4j.DailyRollingFileAppender">
