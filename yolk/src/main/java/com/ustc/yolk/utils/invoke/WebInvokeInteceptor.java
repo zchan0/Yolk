@@ -62,7 +62,7 @@ public class WebInvokeInteceptor implements Filter, InvokeContanst {
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
             afterInvoke(servletResponse, e);
-            return;
+            throw e;
         }
         afterInvoke(servletResponse, null);
     }
