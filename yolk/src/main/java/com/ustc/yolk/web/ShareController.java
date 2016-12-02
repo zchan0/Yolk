@@ -168,11 +168,13 @@ public class ShareController extends BaseController {
      */
     @RequestMapping(value = "batchquery.json")
     @ResponseBody
-    public String queryMyContent(HttpServletRequest servletRequest, @RequestParam(value = "start", required = false) int start,
-                                 @RequestParam(value = "pagesize", required = false) int pageSize) {
+    public String queryMyContent(HttpServletRequest servletRequest, @RequestParam(value = "start", required = false) String start,
+                                 @RequestParam(value = "pagesize", required = false) String pageSize) {
         try {
             User user = getUserFromRequest(servletRequest);
-            List<ShareContent> contents = shareContentService.queryMyRecentContents(user.getUsername(), start, pageSize);
+            ParamChecker.notBlank("start", start);
+            ParamChecker.notBlank("pagesize", pageSize);
+            List<ShareContent> contents = shareContentService.queryMyRecentContents(user.getUsername(), Integer.valueOf(start), Integer.valueOf(pageSize));
             for (ShareContent content : contents) {
                 hidePicName(content);
             }
