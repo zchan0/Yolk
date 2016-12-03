@@ -7,16 +7,9 @@ import com.ustc.yolk.model.ShareContent;
 import com.ustc.yolk.model.SingleContent;
 import com.ustc.yolk.model.User;
 import com.ustc.yolk.service.ShareContentService;
-import com.ustc.yolk.utils.PicUploadUtil;
 import com.ustc.yolk.utils.RSAUtil;
 import com.ustc.yolk.utils.common.ParamChecker;
 import com.ustc.yolk.utils.log.LoggerUtils;
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -63,35 +56,36 @@ public class ShareController extends BaseController {
     /*发布内容 默认都是非public的*/
     @RequestMapping(value = "publish.json")
     @ResponseBody
-    public String publish(HttpServletRequest servletRequest, @RequestParam(value = "textContent", required = false) String textContent) {
+    public String publish(HttpServletRequest servletRequest, @RequestParam(value = "textContent", required = false) String textContent,
+                          @RequestParam(value = "picContent", required = false) String picContent) {
         try {
             User user = getUserFromRequest(servletRequest);
-            Map<String, String> textContents = null;
+            Map<String, String> textContents = Maps.newHashMap();
+            Map<String, String> picContents = Maps.newHashMap();
             try {
                 textContents = JSON.parseObject(textContent, HashMap.class);
+                picContents = JSON.parseObject(picContent, HashMap.class);
+
             } catch (Exception e) {
                 throw new RuntimeException("illegal textContent!");
             }
-            if (textContent == null) {
-                textContents = Maps.newHashMap();
-            }
             //上传图片
-            Map<String, String> pics = uploadPic(servletRequest, user);
-            ParamChecker.assertCondition(textContents.size() != 0 || pics.size() != 0, "empty content!");
-            LoggerUtils.debug(LOGGER, "发布了文字:", textContents);
-            LoggerUtils.debug(LOGGER, "发布了图片", pics);
+            ParamChecker.assertCondition(textContents.size() != 0 || picContents.size() != 0, "empty content!");
+            LoggerUtils.info(LOGGER, "publish text:", textContents);
+            LoggerUtils.info(LOGGER, "publish pic:", picContents);
             //对图片和文字做merge
             List<SingleContent> contents = Lists.newArrayList();
             for (Map.Entry<String, String> entry : textContents.entrySet()) {
-                String picName = pics.get(entry.getKey());
+                String picName = picContents.get(entry.getKey());
                 String text = entry.getValue();
                 ParamChecker.notBlank(text, "empty text content!");
-                pics.remove(entry.getKey());
+                picContents.remove(entry.getKey());
                 contents.add(new SingleContent(picName, text));
             }
             //未被merge图片的单独处理
-            for (Map.Entry<String, String> entry : pics.entrySet()) {
-                String picName = pics.get(entry.getKey());
+            for (Map.Entry<String, String> entry : picContents.entrySet()) {
+                String picName = picContents.get(entry.getKey());
+                ParamChecker.notBlank("picName", picName);
                 contents.add(new SingleContent(picName, null));
             }
 
@@ -107,38 +101,6 @@ public class ShareController extends BaseController {
         }
     }
 
-    /*处理上传的图片*/
-    private Map<String, String> uploadPic(HttpServletRequest request, User user) throws IOException, FileUploadException {
-        Map<String, String> result = Maps.newHashMap();
-        ParamChecker.assertCondition(ServletFileUpload.isMultipartContent(request), SYSTEM_ERROR);
-        //开始处理上传请求
-        PicUploadUtil.ensureFileFolderIsNotNull(user.getUsername());
-        DiskFileItemFactory dff = new DiskFileItemFactory();
-        dff.setRepository(new File(PicUploadUtil.getFileDir(user.getUsername())));
-        dff.setSizeThreshold(1024000);
-        ServletFileUpload sfu = new ServletFileUpload(dff);
-        FileItemIterator fii = null;
-        fii = sfu.getItemIterator(request);
-        while (fii.hasNext()) {
-            FileItemStream fis = fii.next();
-            if (!fis.isFormField() && fis.getName().length() > 0) {
-                String fileName = fis.getName();
-                if (!PicUploadUtil.isValidPicType(fileName)) {
-                    throw new RuntimeException("unsupported file type!");
-                }
-                String realFileName = PicUploadUtil.parseFileName(user.getUsername(), fileName);
-                String url = PicUploadUtil.getFilePath(user.getUsername(), realFileName);
-
-                BufferedInputStream in = new BufferedInputStream(fis.openStream());//获得文件输入流
-                FileOutputStream a = new FileOutputStream(new File(url));
-                BufferedOutputStream output = new BufferedOutputStream(a);
-                Streams.copy(in, output, true);//开始把文件写到你指定的上传文件夹
-                LoggerUtils.info(LOGGER, "write file:", realFileName, " success");
-                result.put(fis.getFieldName(), realFileName);
-            }
-        }
-        return result;
-    }
 
     /**
      * 查询分享的内容

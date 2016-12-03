@@ -12,6 +12,9 @@ import com.ustc.yolk.serialize.DefaultObjectSerializer;
 import com.ustc.yolk.serialize.ObjectSerializer;
 import com.ustc.yolk.serialize.SerializeFactory;
 import com.ustc.yolk.utils.common.ParamChecker;
+import com.ustc.yolk.utils.log.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +31,8 @@ public class BaseController implements Constants {
     private final static String USER_SESSION_KEY = "userSessionId";
     private final static ObjectSerializer SERIALIZER = SerializeFactory
             .getSerializer(DefaultObjectSerializer.class);
+    //日志
+    private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
 
     /**
      * 构建json格式的返回结果
@@ -67,7 +72,9 @@ public class BaseController implements Constants {
             throw new RuntimeException("please login first!");
         }
         ParamChecker.assertCondition(userObject instanceof User, SYSTEM_ERROR);
-        return (User) userObject;
+        User user = (User) userObject;
+        LoggerUtils.info(LOGGER, "current user->", user.getUsername());
+        return user;
     }
 
     /**
