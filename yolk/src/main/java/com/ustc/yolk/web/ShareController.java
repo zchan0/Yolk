@@ -69,6 +69,12 @@ public class ShareController extends BaseController {
             } catch (Exception e) {
                 throw new RuntimeException("illegal textContent!");
             }
+            if (textContents == null) {
+                textContents = Maps.newHashMap();
+            }
+            if (picContents == null) {
+                picContents = Maps.newHashMap();
+            }
             //上传图片
             ParamChecker.assertCondition(textContents.size() != 0 || picContents.size() != 0, "empty content!");
             LoggerUtils.info(LOGGER, "publish text:", textContents);
