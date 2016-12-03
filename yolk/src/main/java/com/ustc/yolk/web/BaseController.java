@@ -44,7 +44,7 @@ public class BaseController implements Constants {
         String key = null;
         for (int i = 1; i <= ext.length; i++) {
             if (i % 2 == 1) {
-                key = JSON.toJSONString(ext[i - 1]);
+                key = ext[i - 1] + "";
             } else {
                 result.put(key, ext[i - 1]);
             }
