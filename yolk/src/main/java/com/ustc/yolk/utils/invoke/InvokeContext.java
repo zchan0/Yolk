@@ -80,7 +80,7 @@ public abstract class InvokeContext<T extends InvokeContext<?>>
             V value = entry.getValue();
             String valueString = value == null ? StringUtils.EMPTY : value.toString();
             if (valueString.length() > 512) {
-                valueString = StringUtils.substring(valueString, 0, 511) + "...";
+                valueString = StringUtils.substring(valueString, 0, 30) + "...";
             }
             stringBuilder.append(valueString);
             if (count < map.size() - 1) {
