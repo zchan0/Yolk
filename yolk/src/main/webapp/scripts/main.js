@@ -63,6 +63,7 @@ $('#logoutBtn').click(function () {
 // share
 $('#shareBtn').click(function () {
     var selectedItemID = getSelectedItemID();
+    var username = $('#logoutBtn').data('username');
     $.ajax({
         url: 'content/share.json',
         type: 'POST',
@@ -74,8 +75,9 @@ $('#shareBtn').click(function () {
         if (results.success === 'true') {
             var host = $(location).attr('hostname');
             var protocol = $(location).attr('protocol');
-            var username = 'test';
-            $('#shareURLForm').val(protocol + '//' + host + '/?username=' + username + '&id=' + results.id);
+            var port = $(location).attr('port');
+            var path = '/yolk/share.html';
+            $('#shareURLForm').val(protocol + '//' + host + ':' + port + path + '?username=' + username + '&id=' + results.id);
             $('#shareModal').modal('toggle');
         } else if (results.success === 'false') {
             console.log('share failed');
@@ -118,12 +120,17 @@ function getAllContent() {
                 var myContents = results.myContents;
                 console.log('mycontents', myContents);
 
-                for (i = 0; i < myContents.length; i++) {
+                var uname = myContents[0].sharedByUsername;
+                $('#logoutBtn').data('username', uname);
+
+                // store username in logout button for later use
+
+                for (var i = 0; i < myContents.length; i++) {
                     //element i
                     var contents = myContents[i];
                     console.log('contents', contents);
 
-                    for (j = 0; j < contents.contents.length; j++) {
+                    for (var j = 0; j < contents.contents.length; j++) {
 
                         //element of share i
                         var item = document.createElement('div');
@@ -175,7 +182,7 @@ function getAllContent() {
 
                             thumbnail.appendChild(image);
                         } else {
-                            console.log("don't have image");
+                            console.log('don\'t have image');
                         }
                         //end of adding img
 
