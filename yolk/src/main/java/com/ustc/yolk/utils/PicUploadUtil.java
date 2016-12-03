@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class PicUploadUtil {
     private final static AtomicLong picCounts = new AtomicLong(0);
-    private final static String FILE_PATH = "/root/yolkfiles/";
     //    private final static String FILE_PATH = "C://";
+    private final static String FILE_PATH = "/root/yolkfiles/";
     private final static String[] validPicType = {"jpg", "png", "ico"};
 
     /*写图片 会校验文件名*/
