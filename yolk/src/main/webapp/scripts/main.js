@@ -282,8 +282,7 @@ function getAllContent() {
                             // img div
                             if (content.picName) {
                                 var img = $('<img>', {
-                                    // 'src': 'pic/download.json?username=' + username + '&fileName=' + content.picName,
-                                    'src': 'http://lorempixel.com/200/200/abstract'
+                                    'src': 'pic/download.json?username=' + username + '&fileName=' + content.picName
                                 }).appendTo(thumbnail);
                             }
 
