@@ -18,5 +18,6 @@ public class RSATest extends BaseTestSupport {
         text.put(1, "我是要发布的text内容1");
         text.put(2, "我是要发布的text内容2");
         print(text);
+        print(RSAUtil.decrypt("VZm2y70kBv9Q4UM8UvdNNJ6dqBkVUbq8003/PPvlsyozuiRtKScLYOZXVBXBrL0+0YKuAq03xfMyV+YKfUJyD8H5VT6Xs3aJ9Tf9lVUjIR14/3ufHN0U3iZ6AA5+MaofitJYAIhDCBiFdk1zo0mzBM/JlbNU9iR0QrV/QR4JJg4="));
     }
 }

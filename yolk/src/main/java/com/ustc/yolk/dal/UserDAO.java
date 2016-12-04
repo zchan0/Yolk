@@ -32,6 +32,12 @@ public class UserDAO extends BaseDAO {
             sqlMapClient.commitTransaction();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                sqlMapClient.endTransaction();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

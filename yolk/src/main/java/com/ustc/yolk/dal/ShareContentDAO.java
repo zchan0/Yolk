@@ -50,6 +50,15 @@ public class ShareContentDAO extends BaseDAO {
     }
 
     /*将内容设置为是否公开*/
-    public void setPublis(int publis) {
+    public long setPublis(String username, long id, int publis) {
+        try {
+            ShareContentDO shareContentDO = new ShareContentDO();
+            shareContentDO.setShareID(id);
+            shareContentDO.setUsername(username);
+            shareContentDO.setIsPublic(publis);
+            return sqlMapClient.update("updatePublic", shareContentDO);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

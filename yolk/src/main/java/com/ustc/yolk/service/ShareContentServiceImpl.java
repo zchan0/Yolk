@@ -7,7 +7,6 @@ import com.ustc.yolk.model.ShareContent;
 import com.ustc.yolk.model.ShareContentDO;
 import com.ustc.yolk.model.User;
 import com.ustc.yolk.utils.common.ParamChecker;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,12 +48,15 @@ public class ShareContentServiceImpl implements ShareContentService {
 
     @Override
     public void share(long id, User user) {
-        ShareContent shareContent = queryById(id);
-        ParamChecker.notNull(shareContent, "illegal share content id!");
-        if (!StringUtils.equals(shareContent.getSharedByUsername(), user.getUsername())) {
-            throw new RuntimeException("illegal user!");
-        }
+//        ShareContent shareContent = queryById(id);
+//        ParamChecker.notNull(shareContent, "illegal share content id!");
+//        if (!StringUtils.equals(shareContent.getSharedByUsername(), user.getUsername())) {
+//            throw new RuntimeException("illegal user!");
+//        }
         //将isPublic设置为true
+        if (shareContentDAO.setPublis(user.getUsername(), id, 1) != 1) {
+            throw new RuntimeException("illegal share id or user");
+        }
     }
 
     @Override

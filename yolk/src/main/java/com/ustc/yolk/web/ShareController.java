@@ -134,6 +134,22 @@ public class ShareController extends BaseController {
     /**
      * 查询自己上传的内容
      */
+    @RequestMapping(value = "delete.json")
+    @ResponseBody
+    public String del(HttpServletRequest servletRequest, @RequestParam(value = "id", required = false) String id) {
+        try {
+            User user = getUserFromRequest(servletRequest);
+            ParamChecker.notBlank("id", id);
+            return wrapSuccessResult("myContents", null);
+        } catch (Exception e) {
+            LoggerUtils.error(LOGGER, e, "query my content error!");
+            return wrapResult(false, e.getMessage());
+        }
+    }
+
+    /**
+     * 查询自己上传的内容
+     */
     @RequestMapping(value = "batchquery.json")
     @ResponseBody
     public String queryMyContent(HttpServletRequest servletRequest, @RequestParam(value = "start", required = false) String start,

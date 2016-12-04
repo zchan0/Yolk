@@ -3,6 +3,7 @@ import com.ustc.yolk.dal.ShareContentDAO;
 import com.ustc.yolk.model.ShareContent;
 import com.ustc.yolk.model.ShareContentDO;
 import com.ustc.yolk.model.SingleContent;
+import com.ustc.yolk.model.User;
 import com.ustc.yolk.service.ShareContentService;
 import com.ustc.yolk.utils.common.ParamChecker;
 import org.junit.Test;
@@ -61,6 +62,22 @@ public class ShareContentTest extends BaseTestSupport {
             List<ShareContentDO> result = contentDAO.queryPub(0, 2);
             print(result);
             print(result.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            print("异常", e.getMessage());
+            assertFalse(true);
+        }
+    }
+
+    @Test
+    public void testSetPublic() {
+        try {
+            ShareContentService shareContentService = springContext.getBean(ShareContentService.class);
+            ParamChecker.notNull(shareContentService, "获取ShareContentService Bean失败");
+            User user = new User();
+            user.setUsername("test");
+            user.encryptPasswd("test");
+            shareContentService.share(2365, user);
         } catch (Exception e) {
             e.printStackTrace();
             print("异常", e.getMessage());
