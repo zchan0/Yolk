@@ -24,4 +24,7 @@ public interface ShareContentService {
 
     /*新增内容 但是不分享*/
     long add(ShareContent shareContent);
+
+    /*删除内容*/
+    void del(long id, User user);
 }

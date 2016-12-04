@@ -61,4 +61,12 @@ public class ShareContentDAO extends BaseDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public void del(ShareContentDO shareContentDO) {
+        try {
+            sqlMapClient.delete("delContent", shareContentDO);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

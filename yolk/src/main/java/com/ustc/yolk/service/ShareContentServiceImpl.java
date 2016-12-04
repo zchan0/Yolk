@@ -64,6 +64,15 @@ public class ShareContentServiceImpl implements ShareContentService {
         return shareContentDAO.insert(voToDO(shareContent));
     }
 
+    @Override
+    public void del(long id, User user) {
+        ShareContentDO shareContentDO = shareContentDAO.queryById(id);
+        if (shareContentDO == null || !shareContentDO.getUsername().equals(user.getUsername())) {
+            throw new RuntimeException("illegal content id!");
+        }
+        shareContentDAO.del(shareContentDO);
+    }
+
     private ShareContent doToVO(ShareContentDO shareContentDO) {
         ShareContent content = JSON.parseObject(shareContentDO.getContent(), ShareContent.class);
         content.setPublic0(shareContentDO.getIsPublic() == 1);

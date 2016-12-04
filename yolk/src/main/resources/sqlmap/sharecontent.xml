@@ -23,4 +23,7 @@
     <update id="updatePublic" parameterClass="ShareContentDO">
         UPDATE share_content SET  isPublic=#isPublic# WHERE username=#username# AND shareID=#shareID#
     </update>
+    <delete id="delContent" parameterClass="ShareContentDO">
+        DELETE FROM share_content WHERE shareID=#shareID# AND username=#username#
+    </delete>
 </sqlMap>

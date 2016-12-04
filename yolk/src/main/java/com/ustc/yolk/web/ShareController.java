@@ -140,7 +140,8 @@ public class ShareController extends BaseController {
         try {
             User user = getUserFromRequest(servletRequest);
             ParamChecker.notBlank("id", id);
-            return wrapSuccessResult("myContents", null);
+            shareContentService.del(Long.valueOf(id), user);
+            return wrapSuccessResult();
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "query my content error!");
             return wrapResult(false, e.getMessage());
