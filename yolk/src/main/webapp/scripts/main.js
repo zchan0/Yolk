@@ -33,6 +33,7 @@ $('#loginBtn').click(function () {
             if (results.success === 'true') {
                 console.log(results);
                 window.location.href = 'timeline.html';
+                rememberPassword();
             } else if (results.success === 'false') {
                 console.log('login failed');
                 // show login error message
@@ -41,6 +42,22 @@ $('#loginBtn').click(function () {
         }
     });
 });
+
+function rememberPassword() {
+    if ($('#remember').is(':checked')) {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        // set cookies to expire in 14 days
+        Cookies.set('username', username, { expires: 14 });
+        Cookies.set('password', password, { expires: 14 });
+        Cookies.set('remember', true, { expires: 14 });
+    } else {
+        // reset cookies
+        Cookies.set('username', null);
+        Cookies.set('password', null);
+        Cookies.set('remember', null);
+    }
+}
 
 //logout function
 $('#logoutBtn').click(function () {
@@ -60,13 +77,26 @@ $('#logoutBtn').click(function () {
     });
 });
 
-//container
-var $container = $('#gridContainer');
-$container.masonry({
-    ifFitWidth: true,
-    itemSelector: '.col-md-4 col-sm-6 item',
-    isAnimated: true
+$(document).ready(function () {
+    var remember = Cookies.get('remember');
+    if (remember === 'true') {
+        var username = Cookies.get('username');
+        var password = Cookies.get('password');
+        // autofill the fields
+        $('#username').val(username);
+        $('#password').val(password);
+        $('#remember').prop('checked', true);
+    }
 });
+
+//container
+//var $container = $('.masonry-container');
+//$container.imagesLoaded( function() {
+//    $container.masonry({
+//        columnWidth: '.item',
+//        itemSelector: '.item',
+//    });
+//});
 
 // share
 $('#shareBtn').click(function () {
@@ -94,7 +124,7 @@ $('#shareBtn').click(function () {
 });
 
 function getSelectedItemID() {
-    return 5870;
+    return $('.active').attr('id');
 }
 
 function loadShareContent() {
@@ -136,7 +166,7 @@ function createShareContentDOM(shareContent) {
         var contents = shareContent[i].contents;
         for (var j = contents.length - 1; j >= 0; j--) {
             var content = contents[i];
-            var src = '/yolk/pic/download.json?username=' + username + '&fileName=' + content.picName;
+            var src = 'pic/download.json?username=' + username + '&fileName=' + content.picName;
             var img = $('<img>', {
                 src: src
             });
@@ -170,12 +200,11 @@ function getAllContent() {
         dataType: 'JSON',
         url: 'content/batchquery.json',
         success: function success(resultsData, status) {
-            console.log('jsonstring', resultsData);
 
             var results = JSON.parse(resultsData);
-            console.log('success', results.success);
-            console.log('myContents', results.myContents);
-            console.log('results', results);
+            //            console.log('success',results.success);
+            //            console.log('myContents',results.myContents);
+            //            console.log('results',results);
 
             if (results.success === 'true') {
                 console.log('batchquery success');
@@ -184,7 +213,6 @@ function getAllContent() {
                 console.log('mycontents', myContents);
 
                 var uname = myContents[0].sharedByUsername;
-
                 // store username in logout button for later use
                 $('#logoutBtn').data('username', uname);
 
@@ -193,83 +221,130 @@ function getAllContent() {
                     var contents = myContents[i];
                     console.log('contents', contents);
 
+                    var $sharePanel = $('<div role="tabpanel" class="tab-pane"></div>');
+                    var $shareContainer = $('#gridContainer').clone(true);
+                    //delete children
+                    $shareContainer.empty();
+                    var $origin = $('#origin').clone(true);
+                    $origin.attr('id', contents.id);
+                    $shareContainer.append($origin);
+
+                    //give masonry property
+                    //                    $shareContainer.imagesLoaded( function() {
+                    //                        $shareContainer.masonry({
+                    //                            columnWidth: '.item',
+                    //                            itemSelector: '.item',
+                    //                        });
+                    //                    });
+
+                    if (i === 0) {
+                        $('.active').attr('id', contents.id);
+                        $shareContainer = $('#gridContainer');
+                    } else {
+                        //create new panel!
+                        var $li = $('<li role="presentation"></li>');
+                        $li.attr('id', contents.id);
+
+                        var $a = $('<a data-toggle="tab" role="tab"></a>');
+                        var tag = 'share-' + (i + 1).toString();
+                        $a.attr('href', '#' + tag);
+                        $a.attr('aria-controls', tag);
+                        $a.append(tag);
+                        $li.append($a);
+
+                        $('[role="tablist"]').append($li);
+
+                        $sharePanel.attr('id', tag);
+                        $sharePanel.append($shareContainer);
+                        $shareContainer.attr('id', tag);
+                        //                        shareContainer.setAttribute('id',tag);
+                    }
+                    $('#inputPanelHere').append($sharePanel);
+
                     for (var j = 0; j < contents.contents.length; j++) {
 
                         //element of share i
-                        var item = document.createElement('div');
-                        item.setAttribute('class', 'col-md-4 col-sm-6 item');
-
-                        var thumbnail = document.createElement('div');
-                        thumbnail.setAttribute('class', 'thumbnail');
-
-                        var caption = document.createElement('div');
-                        caption.setAttribute('class', 'caption');
-
-                        var h3 = document.createElement('h3');
-                        var p1 = document.createElement('p');
-                        var p2 = document.createElement('p');
-
-                        var a1 = document.createElement('a');
-                        a1.setAttribute('href', '#');
-                        a1.setAttribute('class', 'btn btn-default');
-                        a1.setAttribute('role', 'button');
-                        a1.setAttribute('id', 'selectBtn');
-                        a1.innerHTML = 'select';
-                        p2.appendChild(a1);
-
-                        var a2 = document.createElement('a');
-                        a2.setAttribute('href', '#');
-                        a2.setAttribute('class', 'btn btn-danger');
-                        a2.setAttribute('role', 'button');
-                        a2.setAttribute('id', 'deleteBtn');
-                        a2.innerHTML = 'select';
-                        a2.innerHTML = 'button';
-                        p2.appendChild(a2);
+                        //clone origin
+                        var $item = $('#origin').clone(true);
+                        //                        let item = document.createElement('div');
+                        //                        item.setAttribute('class','col-md-4 col-sm-6 item');
+                        //
+                        //                        let thumbnail = document.createElement('div');
+                        //                        thumbnail.setAttribute('class','thumbnail');
+                        //
+                        //                        let caption = document.createElement('div')
+                        //                        caption.setAttribute('class','caption');
+                        //
+                        //                        let h3 = document.createElement('h3');
+                        //                        let p1 = document.createElement('p');
+                        //                        let p2 = document.createElement('p');
+                        //
+                        //                        let a1 = document.createElement('a');
+                        //                        a1.setAttribute('href','#');
+                        //                        a1.setAttribute('class','btn btn-default');
+                        //                        a1.setAttribute('role','button');
+                        //                        a1.setAttribute('id','selectBtn');
+                        //                        a1.innerHTML = 'select';
+                        //                        p2.appendChild(a1);
+                        //
+                        //                        let a2 = document.createElement('a');
+                        //                        a2.setAttribute('href','#');
+                        //                        a2.setAttribute('class','btn btn-danger');
+                        //                        a2.setAttribute('role','button');
+                        //                        a2.setAttribute('id','deleteBtn');
+                        //                        a2.innerHTML = 'select';
+                        //                        a2.innerHTML = 'button';
+                        //                        p2.appendChild(a2);
                         //end of basic set of DOM!
 
                         //start to input contents to DOM!
-                        p1.innerHTML = contents.contents[j].text;
-                        h3.innerHTML = 'Description';
-
-                        caption.appendChild(h3);
-                        caption.appendChild(p1);
-                        caption.appendChild(p2);
+                        $item.find('#description').html(contents.contents[j].text);
+                        //                        p1.innerHTML = contents.contents[j].text;
+                        //                        h3.innerHTML = 'Description';
+                        //
+                        //                        caption.appendChild(h3);
+                        //                        caption.appendChild(p1);
+                        //                        caption.appendChild(p2);
 
                         //if has picture, add img element!
                         if (contents.contents[j].hasOwnProperty('picName')) {
-                            console.log('have picture');
-                            var image = document.createElement('img');
-                            image.setAttribute('alt', '');
-                            var src = '/yolk/pic/download.json?username=' + contents.sharedByUsername + '&fileName=' + contents.contents[j].picName;
-                            image.setAttribute('src', src);
+                            //                            console.log('have picture');
+                            //                            let image = document.createElement('img');
+                            //                            image.setAttribute('alt','');
+                            //                            let src = '/yolk/pic/download.json?username='+contents.sharedByUsername+'&fileName='+contents.contents[j].picName;
+                            $item.find('#image').attr('src', 'pic/download.json?username=' + contents.sharedByUsername + '&fileName=' + contents.contents[j].picName);
+                            //                            image.setAttribute('src',src);
 
-                            thumbnail.appendChild(image);
+                            //                            thumbnail.appendChild(image);
                         } else {
+                            $item.find('#image').remove();
                             console.log('don\'t have image');
                         }
                         //end of adding img
 
-                        thumbnail.appendChild(caption);
-                        item.appendChild(thumbnail);
-                        item.setAttribute('id', contents.id);
+                        //                        thumbnail.appendChild(caption);
+                        //                        item.appendChild(thumbnail);
+                        //                        item.setAttribute('id',contents.id);
+                        $item.attr('id', contents.id);
                         //end of input contents to DOM!
 
                         //use masonry to add new item
-                        $container.masonry().append(item).masonry('appended', item);
+                        $shareContainer.masonry().append($item).masonry('appended', $item);
                     }
+                    $shareContainer.masonry('layout');
                     //basic set of DOM!
 
                     //add a divider of each share. not working???
-                    var ul = document.createElement('ul');
-                    ul.setAttribute('class', 'nav nav-list');
-                    var divider = document.createElement('li');
-                    divider.setAttribute('class', 'divider');
-                    ul.appendChild(divider);
-                    $container.masonry().append(ul).masonry('appended', ul);
+                    //                    let ul = document.createElement('ul');
+                    //                    ul.setAttribute('class','nav nav-list');
+                    //                    let divider = document.createElement('li');
+                    //                    divider.setAttribute('class','divider');
+                    //                    ul.appendChild(divider);
+                    //                    $container.masonry().append(ul).masonry('appended',ul);
                 }
             } else if (results.success === 'false') {
                 console.log('batchquery failure');
-                alert('cannot get contents!');
+                window.location.href = '404.html';
             }
         }
     });
@@ -296,6 +371,7 @@ $('#uploadBtn').click(function () {
 
     var login = $.ajax({
         url: 'content/publish.json',
+        fileElementId: '1',
         type: 'POST',
         cache: false,
         data: formdata,
@@ -350,6 +426,19 @@ $('#loginForm').validate();
         $container.masonry({
             columnWidth: '.item',
             itemSelector: '.item'
+        });
+    });
+
+    $('a[data-toggle=tab]').each(function () {
+        var $this = $(this);
+
+        $this.on('shown.bs.tab', function () {
+            $container.imagesLoaded(function () {
+                $container.masonry({
+                    columnWidth: '.item',
+                    itemSelector: '.item'
+                });
+            });
         });
     });
 })(jQuery);
