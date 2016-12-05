@@ -5,8 +5,11 @@ import com.google.common.collect.Lists;
 import com.ustc.yolk.dal.ShareContentDAO;
 import com.ustc.yolk.model.ShareContent;
 import com.ustc.yolk.model.ShareContentDO;
+import com.ustc.yolk.model.SingleContent;
 import com.ustc.yolk.model.User;
+import com.ustc.yolk.utils.PicUploadUtil;
 import com.ustc.yolk.utils.common.ParamChecker;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -71,6 +74,13 @@ public class ShareContentServiceImpl implements ShareContentService {
             throw new RuntimeException("illegal content id!");
         }
         shareContentDAO.del(shareContentDO);
+        ShareContent content = doToVO(shareContentDO);
+        for (SingleContent singleContent : content.getContents()) {
+            if (StringUtils.isNoneBlank(singleContent.getPicName())) {
+                //删除图片
+                PicUploadUtil.delFile(content.getSharedByUsername(), singleContent.getPicName());
+            }
+        }
     }
 
     private ShareContent doToVO(ShareContentDO shareContentDO) {

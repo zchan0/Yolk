@@ -35,6 +35,17 @@ public class PicUploadUtil {
         }
     }
 
+    /*安全的删除文件*/
+    public static boolean delFile(String username, String fileName) {
+        try {
+            File file = new File(getFilePath(username, fileName));
+            return file.delete();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     /*获取文件所在的文件夹*/
     public static String getFileDir(String username) {
         return FILE_PATH + username;
