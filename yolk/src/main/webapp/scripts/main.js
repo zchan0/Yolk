@@ -372,54 +372,90 @@ var count = 0;
 
 //upload only one file each time
 function uploadOneFile(a) {
-    if ($('textarea').val() == '' && $('#uploadFileInput')[0].value == '') return;
+    //    if($('textarea').val() == '' && $('#uploadFileInput')[0].value == '')
+    //        return ;
+    //    if($('textarea').val() != '' && $('#uploadFileInput')[0].value != ''){
+    //        $.ajax({
+    //            url: 'pic/upload.json',
+    //            fileElementId: 'uploadFileInput',
+    //            type: 'POST',
+    //            cache: false,
+    //            processData: false,
+    //            contentType: 'multipart/form-data;boundary='+Math.floor(Math.random()*10000).toString(),
+    //            data: new FormData($('#uploadFileInput')[0]),
+    //            success: function(resultsData, status) {
+    //                let results = JSON.parse(resultsData);
+    //                if (results.success === 'true') {
+    //                    texContent.append(count.toString()+':'+$('textarea').val());
+    //                    picContent.append(count.toString()+':'+results.picName);
+    //                    count++;
+    //                    console.log('upload success');
+    //                    //close modal
+    //                    //$('#uploadModal').modal('hide');
+    //                } else if (results.success === 'false') {
+    //                    console.log('logout failure');
+    //                    alert(results.errorMsg);
+    //                }
+    //            },
+    //            abort:function(resultsData,status){
+    //                console.log(resultsData);
+    //            }
+    //        });
+    //    }
+    //    if($('textarea').val() != '' && $('#uploadFileInput')[0].value == ''){
+    //        texContent.append(count.toString()+':'+$('textarea').val());
+    //        count++;
+    //    }
+    //    if($('textarea').val() == '' && $('#uploadFileInput')[0].value != ''){
+    //        $.ajax({
+    //            url: 'pic/upload.json',
+    //            fileElementId: 'uploadFileInput',
+    //            type: 'POST',
+    //            cache: false,
+    //            processData: false,
+    //            contentType: 'multipart/form-data;boundary='+Math.floor(Math.random()*10000).toString(),
+    //            data: new FormData($('#uploadFileInput')[0]),
+    //            success: function(resultsData, status) {
+    //                let results = JSON.parse(resultsData);
+    //                if (results.success === 'true') {
+    //                    picContent.append(count.toString()+':'+results.picName);
+    //                    count++;
+    //                    console.log('upload success');
+    //                    //close modal
+    //                    //$('#uploadModal').modal('hide');
+    //                } else if (results.success === 'false') {
+    //                    console.log('logout failure');
+    //                    alert(results.errorMsg);
+    //                }
+    //            },
+    //            abort:function(resultsData,status){
+    //                console.log(resultsData);
+    //            }
+    //        });
+    //    }
 
-    $.ajax({
+    $.ajaxFileUpload({
         url: 'pic/upload.json',
+        secureuri: false,
         fileElementId: 'uploadFileInput',
-        type: 'POST',
-        cache: false,
-        processData: false,
-        contentType: 'multipart/form-data;boundary=' + Math.floor(Math.random() * 10000).toString(),
-        data: new FormData($('#uploadFileInput')[0]),
-        success: function success(resultsData, status) {
-            var results = JSON.parse(resultsData);
-            if (results.success === 'true') {
-                console.log('upload success');
-                //close modal
-                $('#closeModal').click();
-                //$('#uploadModal').modal('hide');
-            } else if (results.success === 'false') {
-                console.log('logout failure');
-                alert(results.errorMsg);
+        dataType: 'json',
+        success: function success(data, status) {
+            console.log(data);
+            alert(data);
+            var result = JSON.parse(data);
+            if (result.success === true) {
+                alert(results.picName);
+            } else {
+                alert(data);
             }
         },
-        abort: function abort(resultsData, status) {
-            console.log(resultsData);
+        error: function error(data, status, e) {
+            alert(e);
+        },
+        abort: function abort(data, status, e) {
+            console.log(data);
         }
     });
-    //    $.ajaxFileUpload({
-    //        url:'pic/upload.json',
-    //        secureuri: false,
-    //        fileElementId:'uploadFileInput',
-    //        dataType:'json',
-    //        success: function (data, status)
-    //        {
-    //            console.log(data);
-    //            alert(data);
-    //            let result = JSON.parse(data);
-    //            if(result.success === true){
-    //                alert(results.picName);
-    //            }
-    //            else{
-    //                alert(data);
-    //            }
-    //        },
-    //        error: function (data,status,e)
-    //        {
-    //            alert(e);
-    //        }
-    //    });
 }
 
 //haven't let the pic show on page!
