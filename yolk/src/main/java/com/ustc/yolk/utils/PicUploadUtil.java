@@ -1,6 +1,7 @@
 package com.ustc.yolk.utils;
 
 import com.ustc.yolk.utils.common.ParamChecker;
+import com.ustc.yolk.utils.common.SystemUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,9 +16,21 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class PicUploadUtil {
     private final static AtomicLong picCounts = new AtomicLong(0);
-    private final static String FILE_PATH = "C://";
-    //    private final static String FILE_PATH = "/root/yolkfiles/";
+    private static String FILE_PATH = null;
     private final static String[] validPicType = {"jpg", "png", "ico"};
+
+    static {
+        String os = SystemUtils.getOsType();
+        if (StringUtils.equals("windows", os)) {
+            FILE_PATH = "C://";
+        } else {
+            FILE_PATH = "/root/yolkfiles/";
+        }
+    }
+
+    public static void main(String[] args) {
+
+    }
 
     /*写图片 会校验文件名*/
     public void writeFile(MultipartFile multipartFile, String username)
