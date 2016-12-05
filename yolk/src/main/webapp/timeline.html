@@ -21,6 +21,7 @@
           <div class="form-group">
               <button type="button" class="btn btn-large btn-info" id="shareBtn">Share</button>
               <button type="button" class="btn btn-large btn-success" id="showModalBtn" data-toggle="modal" data-target="#uploadModal">Upload</button>
+              <button type="button" class="btn btn-large btn-danger" id="deleteBtn">Delete</button>
               <button type="button" class="btn btn-large btn-default" id="logoutBtn">Logout</button>
           </div>
         </form>
@@ -29,7 +30,7 @@
 
     <div class="container" id="mainContainer">
 
-      <div id="loader"></div>
+      <div class="loader"></div>
 
     </div>
 
@@ -42,6 +43,8 @@
     <!-- Modal -->
     <div id="uploadModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
+            
+            <div class="loader hidden"></div>
 
             <!-- Modal content-->
             <div class="modal-content">
@@ -69,8 +72,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" id="uploadBtn" onclick="uploadOneFile(this)">UploadNext</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-success" onclick="uploadOneFile(this)">UploadNext</button>
+                    <button type="button" class="btn btn-default" onclick="publish()">Publish</button>
                 </div>
             </div>
 
