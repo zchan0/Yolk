@@ -28,10 +28,6 @@ public class PicUploadUtil {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
-
     /*写图片 会校验文件名*/
     public void writeFile(MultipartFile multipartFile, String username)
             throws IllegalStateException,

@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +37,8 @@ public class PictureController extends BaseController {
     //TODO 对图片做缓存
 
     @RequestMapping(value = "upload.json")
-    @ResponseBody
-    public String addPic(HttpServletRequest req) {
+//    @ResponseBody
+    public void addPic(HttpServletRequest req, HttpServletResponse response) throws IOException {
         try {
             User user = getUserFromRequest(req);
             Map<String, String> pics = uploadPic(req, user);
@@ -48,11 +47,20 @@ public class PictureController extends BaseController {
             for (Map.Entry<String, String> entry : pics.entrySet()) {
                 picName = entry.getValue();
             }
-            return wrapSuccessResult("picName", picName);
+            response.setContentType("text/html");
+            write(response, wrapSuccessResult("picName", picName));
+//            return wrapSuccessResult("picName", picName);
         } catch (Exception e) {
             LoggerUtils.error(LOGGER, e, "upload picture error!");
-            return wrapResult(false, e.getMessage());
+//            return wrapResult(false, e.getMessage());
+            write(response, wrapResult(false, e.getMessage()));
         }
+    }
+
+    private void write(HttpServletResponse response, String result) throws IOException {
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(result.getBytes());
+        IOUtils.closeQuietly(outputStream);
     }
 
     /*处理上传的图片*/

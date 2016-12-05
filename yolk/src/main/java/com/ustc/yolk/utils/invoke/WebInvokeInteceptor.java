@@ -46,7 +46,6 @@ public class WebInvokeInteceptor implements Filter, InvokeContanst {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
         initContext((HttpServletRequest) servletRequest);
         //put trace id
         MDC.put(TraceUtils.TRACE_ID, InvokeContext.get().getTraceId());
