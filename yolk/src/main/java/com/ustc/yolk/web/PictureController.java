@@ -6,12 +6,14 @@ import com.ustc.yolk.utils.PicUploadUtil;
 import com.ustc.yolk.utils.RSAUtil;
 import com.ustc.yolk.utils.common.ParamChecker;
 import com.ustc.yolk.utils.log.LoggerUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,6 +58,32 @@ public class PictureController extends BaseController {
             return wrapResult(false, e.getMessage());
 //            write(response, wrapResult(false, e.getMessage()));
         }
+    }
+
+    @RequestMapping(value = "upload64.json")
+    @ResponseBody
+    public String addPic64(HttpServletRequest req, HttpServletResponse response) throws IOException {
+        try {
+            User user = getUserFromRequest(req);
+            String picName = uploadPic64(req, user);
+            LoggerUtils.info(LOGGER, "write file:", picName);
+            return wrapSuccessResult("picName", picName);
+        } catch (Exception e) {
+            LoggerUtils.error(LOGGER, e, "upload picture error!");
+            return wrapResult(false, e.getMessage());
+        }
+    }
+
+    private String uploadPic64(HttpServletRequest request, User user) throws IOException {
+        String file64 = request.getParameter("img");
+        String type = request.getParameter("type");
+        ParamChecker.assertCondition(PicUploadUtil.isValidPicType(type), "illegal pic type!");
+        ParamChecker.notBlank("img", file64);
+        byte[] fileCodes = Base64.decodeBase64(file64);
+        String fileName = PicUploadUtil.parseFileName(user.getUsername(), "img." + type);
+        File file = new File(PicUploadUtil.getFilePath(user.getUsername(), fileName));
+        FileUtils.writeByteArrayToFile(file, fileCodes);
+        return fileName;
     }
 
     private void write(HttpServletResponse response, String result) throws IOException {
