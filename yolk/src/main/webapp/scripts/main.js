@@ -409,7 +409,7 @@ function uploadOneFile(a) {
             FR.onload = function (e) {
                 document.getElementById('preDisplay').src = e.target.result;
                 var base = e.target.result;
-                var data = 'img=' + base.replace(/data:image\/(png|jpg);base64\,/, '') + '&type=' + base.substring(11, 14);
+                var data = 'img=' + encodeURIComponent(base.replace(/data:image\/(png|jpg);base64\,/, '')) + '&type=' + base.substring(11, 14);
                 $.ajax({
                     type: 'POST',
                     data: data,
@@ -446,7 +446,7 @@ function uploadOneFile(a) {
             FR.onload = function (e) {
                 document.getElementById('preDisplay').src = e.target.result;
                 var base = e.target.result;
-                var data = 'img=' + base.replace(/data:image\/(png|jpg);base64\,/, '') + '&type=' + base.substring(11, 14);
+                var data = 'img=' + encodeURIComponent(base.replace(/data:image\/(png|jpg);base64\,/, '')) + '&type=' + base.substring(11, 14);
                 $.ajax({
                     type: 'POST',
                     data: data,
@@ -474,10 +474,19 @@ function uploadOneFile(a) {
     }
 }
 
+function isEmptyObject(e) {
+    var t;
+    for (t in e) {
+        return !1;
+    }return !0;
+}
 //haven't let the pic show on page!
 //upload function
 $('#uploadBtn').click(function () {
+    //return if null
+    if (isEmptyObjec(textContent) && isEmptyObjec(picContent)) return;
     var data = 'textContent=' + JSON.stringify(textContent) + '&picContent=' + JSON.stringify(picContent);
+    console.log(data);
     $.ajax({
         url: 'content/publish.json',
         type: 'POST',
