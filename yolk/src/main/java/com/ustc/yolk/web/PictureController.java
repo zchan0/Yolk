@@ -69,21 +69,21 @@ public class PictureController extends BaseController {
         fii = sfu.getItemIterator(request);
         while (fii.hasNext()) {
             FileItemStream fis = fii.next();
-            if (!fis.isFormField() && fis.getName().length() > 0) {
-                String fileName = fis.getName();
-                if (!PicUploadUtil.isValidPicType(fileName)) {
-                    throw new RuntimeException("unsupported file type!");
-                }
-                String realFileName = PicUploadUtil.parseFileName(user.getUsername(), fileName);
-                String url = PicUploadUtil.getFilePath(user.getUsername(), realFileName);
-
-                BufferedInputStream in = new BufferedInputStream(fis.openStream());//获得文件输入流
-                FileOutputStream a = new FileOutputStream(new File(url));
-                BufferedOutputStream output = new BufferedOutputStream(a);
-                Streams.copy(in, output, true);//开始把文件写到你指定的上传文件夹
-                LoggerUtils.info(LOGGER, "write file:", realFileName, " success");
-                result.put(fis.getFieldName(), realFileName);
+//            if (!fis.isFormField() && fis.getName().length() > 0) {
+            String fileName = fis.getName();
+            if (!PicUploadUtil.isValidPicType(fileName)) {
+                throw new RuntimeException("unsupported file type!");
             }
+            String realFileName = PicUploadUtil.parseFileName(user.getUsername(), fileName);
+            String url = PicUploadUtil.getFilePath(user.getUsername(), realFileName);
+
+            BufferedInputStream in = new BufferedInputStream(fis.openStream());//获得文件输入流
+            FileOutputStream a = new FileOutputStream(new File(url));
+            BufferedOutputStream output = new BufferedOutputStream(a);
+            Streams.copy(in, output, true);//开始把文件写到你指定的上传文件夹
+            LoggerUtils.info(LOGGER, "write file:", realFileName, " success");
+            result.put(fis.getFieldName(), realFileName);
+//            }
         }
         return result;
     }
